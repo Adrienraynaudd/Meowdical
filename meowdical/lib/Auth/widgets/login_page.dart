@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../services/LoginAuthentication_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -9,25 +9,22 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String? _errorMessage;
 
   void _signIn() async {
     try {
-      await _auth.signInWithEmailAndPassword(
+      await LoginAuthenticationService().signIn(
         email: _emailController.text,
         password: _passwordController.text,
       );
       Navigator.popAndPushNamed(context, '/');
-    } on FirebaseAuthException catch (e) {
-      print('Error during login: ${e.message}, Code: ${e.code}');
-      setState(() {
-        _errorMessage = e.message;
-      });
     } catch (e) {
       print('Unexpected error during login: $e');
+      setState(() {
+        _errorMessage = e.toString();
+      });
     }
   }
 

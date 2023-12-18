@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../services/RegisterAuthentication_service.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
@@ -9,22 +9,21 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   String? _errorMessage;
 
   void _register() async {
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await RegisterAuthenticationService().register(
         email: _emailController.text,
         password: _passwordController.text,
       );
       Navigator.pushReplacementNamed(context, '/');
-    } on FirebaseAuthException catch (e) {
-      print('Error during registration: ${e.message}');
+    } on Exception catch (e) {
+      print('Unexpected error during registration: $e');
       setState(() {
-        _errorMessage = e.message;
+        _errorMessage = e.toString();
       });
     }
   }
@@ -50,7 +49,9 @@ class _AuthPageState extends State<AuthPage> {
                   filled: true,
                   fillColor: Colors.grey[200],
                   contentPadding: const EdgeInsets.symmetric(
-                      vertical: 14.0, horizontal: 16.0),
+                    vertical: 14.0,
+                    horizontal: 16.0,
+                  ),
                 ),
                 keyboardType: TextInputType.emailAddress,
               ),
@@ -65,7 +66,9 @@ class _AuthPageState extends State<AuthPage> {
                   filled: true,
                   fillColor: Colors.grey[200],
                   contentPadding: const EdgeInsets.symmetric(
-                      vertical: 14.0, horizontal: 16.0),
+                    vertical: 14.0,
+                    horizontal: 16.0,
+                  ),
                 ),
                 obscureText: true,
               ),
