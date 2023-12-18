@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'Auth/widgets/auth_page.dart' as Register;
+import 'Auth/widgets/login_page.dart';
 import 'Geoloc/widgets/geoloc_page.dart';
 
 void main() async {
@@ -25,6 +27,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Notes Application with Firebase'),
+      routes: {
+        '/auth': (context) => Register.AuthPage(),
+      },
     );
   }
 }
@@ -41,7 +46,24 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   // Function to navigate to the authentication page
   void _navigateToAuthPage() {
-    Navigator.pushNamed(context, '/auth');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Register.AuthPage()),
+    );
+  }
+
+  // Function to navigate to the login page
+  void _navigateToLoginPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  }
+
+  // Function to sign out the user
+  void _signOut() async {
+    await FirebaseAuth.instance.signOut();
+    setState(() {});
   }
 
   void _navigateToGeolocPage() {
@@ -65,6 +87,17 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: _navigateToAuthPage,
             ),
           // Show user icon if the user is not logged in
+          if (FirebaseAuth.instance.currentUser == null)
+            IconButton(
+              icon: Icon(Icons.person),
+              onPressed: _navigateToLoginPage,
+            ),
+          // Show logout icon if the user is logged in
+          if (FirebaseAuth.instance.currentUser != null)
+            IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: _signOut,
+            ),
           if (FirebaseAuth.instance.currentUser != null)
             IconButton(
               icon: Icon(Icons.gps_fixed),
