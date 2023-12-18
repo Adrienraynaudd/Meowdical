@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "844292071989",
+    "project_id": "meowdical-3b435",
+    "storage_bucket": "meowdical-3b435.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844292071989:android:3a508e2ec58e950baf077c",
+        "android_client_info": {
+          "package_name": "com.example.meowdical"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDW4ogR53QLHObL6zqXkvpbkMa43oO8gj4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
