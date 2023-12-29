@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:meowdical/PhotoAlbum/Pages/AddPicPage.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -36,7 +43,17 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
+        child : ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddPic()),
+            );
+          },
+          child: const Text('Go to PageTest2'),
+        ),
       ),
+      
     );
   }
 }
