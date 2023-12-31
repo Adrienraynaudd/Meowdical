@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:meowdical/PhotoAlbum/Pages/AddPicPage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:meowdical/PhotoAlbum/Pages/ShowImagesPage.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -38,22 +39,33 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
       body: Center(
-        child : ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AddPic()),
-            );
-          },
-          child: const Text('Go to PageTest2'),
+        child: Column(
+          
+          children: [
+            
+            const Padding(padding: EdgeInsets.all(30)),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddPic()),
+                );
+              },
+              child: const Text('Go to PageTest2'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ShowImages()),
+                );
+              },
+              child: const Text('Show Images'),
+            ),
+          ],
         ),
       ),
-      
     );
   }
 }

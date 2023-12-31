@@ -22,6 +22,7 @@ class _AddPicState extends State<AddPic> {
           children: [
             const Padding(padding: EdgeInsets.all(30)),
             Expanded(
+              
              child :  AddButton()
             )
             
@@ -41,3 +42,5 @@ class _AddPicState extends State<AddPic> {
     );
   }
 }
+
+

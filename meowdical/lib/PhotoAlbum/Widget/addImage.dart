@@ -1,7 +1,11 @@
+import 'dart:typed_data';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
+
+import 'package:meowdical/PhotoAlbum/Model/modelPhoto.dart';
+import 'package:meowdical/PhotoAlbum/Service/photoController.dart';
 
 class AddButton extends StatefulWidget {
   @override
@@ -9,6 +13,8 @@ class AddButton extends StatefulWidget {
 }
 
 class _AddButton extends State<AddButton> {
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
 
@@ -20,36 +26,47 @@ class _AddButton extends State<AddButton> {
     });
   }
 
-  Future uploadFile() async {
+  Future<String> uploadFile() async {
+    if (pickedFile == null) return '';
+
+    // final Uint8List fileBytes = await file.readAsBytes();
+
     final path = 'files/${pickedFile!.name}';
-    final file = File(pickedFile!.path!);
+    // final file = File(pickedFile!.path!);
+
+    final file = pickedFile!.bytes!;
 
     final ref = FirebaseStorage.instance.ref().child(path);
     setState(() {
-      uploadTask = ref.putFile(file);
+      uploadTask = ref.putData(file);
     });
 
     final snapshot = await uploadTask!.whenComplete(() {});
 
     final urlDownload = await snapshot.ref.getDownloadURL();
+
     print('Download-Link: $urlDownload');
+
+    // print("hello");
 
     setState(() {
       pickedFile = null;
     });
+
+    return urlDownload;
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Center(
-          child: Column(
+            child: Column(
           children: [
             if (pickedFile != null)
               Expanded(
                 child: Container(
                   color: Colors.greenAccent,
-                  child: Image.file(
-                    File(pickedFile!.path!),
+                  child: Image.memory(
+                    pickedFile!.bytes!,
                     fit: BoxFit.cover,
                     width: double.infinity,
                   ),
@@ -59,8 +76,36 @@ class _AddButton extends State<AddButton> {
               onPressed: selectFile,
               child: Text('Select Image'),
             ),
+            TextField(
+              controller: titleController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Nom de la photo',
+              ),
+            ),
+            TextField(
+              controller: descriptionController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Description',
+              ),
+            ),
+            
             TextButton(
-              onPressed: uploadFile,
+              onPressed: () async {
+                final url = await uploadFile();
+
+                final photo = ModelPhoto(
+                  nomDeLaPhoto : titleController.text ,
+                  description : descriptionController.text,
+                  lienPhoto : url,
+                  // uid : ,
+                );
+
+                await PhotoController().upload(photo);
+
+                Navigator.pop(context);
+              },
               child: Text('Upload Image'),
             ),
             const SizedBox(height: 20),
