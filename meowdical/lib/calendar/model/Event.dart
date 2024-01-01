@@ -1,6 +1,11 @@
 class Event {
   final String? id;
-  final String title;
+  String title;
+  String uid;
+  String time;
   
-  Event({this.id, required this.title});
+  Event({this.id, required this.title, required this.uid, required this.time});
+
+  @override
+  String toString() => "$title of $uid";
 }

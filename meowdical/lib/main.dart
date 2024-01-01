@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
-import './calendar/widget/Calendar.dart';
+import './calendar/widget/Calendar_Page.dart';
 import './Auth/widgets/auth_page.dart';
 import './Auth/widgets/login_page.dart';
 
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/': (context) => const Home(),
-        '/calendar': (context) => const Calendar(),
+        '/calendar': (context) => const Calendar_Page(),
         '/auth': (context) => const AuthPage(),
         '/login': (context) => const LoginPage(),
       }
