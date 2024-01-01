@@ -1,7 +1,8 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import '../services/geoloc_service.dart';
+import 'package:google_place/google_place.dart';
 
 class GeolocPage extends StatefulWidget {
   const GeolocPage({Key? key}) : super(key: key);
@@ -11,9 +12,13 @@ class GeolocPage extends StatefulWidget {
 }
 
 class _GeolocPageState extends State<GeolocPage> {
-  final GeolocService _geolocService = GeolocService();
   late GoogleMapController _mapController;
   LatLng? _currentPosition;
+  GooglePlace _googlePlace;
+  List<SearchResult> _searchResults = [];
+
+  _GeolocPageState()
+      : _googlePlace = GooglePlace("AIzaSyCbTRSUYMFR-tAoPu6ocyPqqHPuYNIXGEI");
 
   @override
   void initState() {
@@ -28,8 +33,6 @@ class _GeolocPageState extends State<GeolocPage> {
   Future<void> _requestLocationPermissionAndGetCurrentLocation() async {
     bool isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!isLocationServiceEnabled) {
-      // Location services are not enabled
-      // You may want to show an alert or guide the user to enable location services
       print('Location services are disabled');
       return;
     }
@@ -46,22 +49,69 @@ class _GeolocPageState extends State<GeolocPage> {
         await _getCurrentLocation();
       }
     } else {
-      // Handle the case when the user denies location permission
       print('Location permission denied');
-      // You may want to show an alert or guide the user to grant location permission
     }
   }
 
   Future<void> _getCurrentLocation() async {
     try {
-      Position position = await _geolocService.getCurrentLocation();
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
       setState(() {
         _currentPosition = LatLng(position.latitude, position.longitude);
       });
     } catch (e) {
       print('Error getting location: $e');
-      // Handle the case when there's an error getting the location
     }
+  }
+
+  Future<void> _searchVets() async {
+    try {
+      final result = await _googlePlace.search.getNearBySearch(
+        Location(
+            lat: _currentPosition!.latitude, lng: _currentPosition!.longitude),
+        5000,
+        type: 'veterinary_care',
+      );
+
+      if (result != null &&
+          result.results != null &&
+          result.results!.isNotEmpty) {
+        setState(() {
+          _searchResults = result.results!;
+        });
+      }
+    } catch (e) {
+      print('Error searching vets: $e');
+    }
+  }
+
+//eeeeeeeeeeeeeeeeeeeeeeeee
+  Set<Marker> _createMarkers() {
+    Set<Marker> markers = {};
+
+    if (_currentPosition != null) {
+      markers.add(Marker(
+        markerId: MarkerId('currentLocation'),
+        position: _currentPosition!,
+        infoWindow: InfoWindow(title: 'Your Location'),
+      ));
+    }
+
+    for (var result in _searchResults) {
+      markers.add(Marker(
+        markerId: MarkerId(result.placeId ?? ""),
+        position: LatLng(
+          result.geometry?.location?.lat ?? 0.0,
+          result.geometry?.location?.lng ?? 0.0,
+        ),
+        infoWindow: InfoWindow(title: result.name ?? ""),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+      ));
+    }
+
+    return markers;
   }
 
   @override
@@ -71,23 +121,27 @@ class _GeolocPageState extends State<GeolocPage> {
         title: const Text('Geolocation'),
       ),
       body: _currentPosition != null
-          ? GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: _currentPosition!,
-                zoom: 15,
-              ),
-              onMapCreated: (controller) {
-                setState(() {
-                  _mapController = controller;
-                });
-              },
-              markers: {
-                Marker(
-                  markerId: MarkerId('currentLocation'),
-                  position: _currentPosition!,
-                  infoWindow: InfoWindow(title: 'Your Location'),
+          ? Column(
+              children: [
+                Expanded(
+                  child: GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: _currentPosition!,
+                      zoom: 15,
+                    ),
+                    onMapCreated: (controller) {
+                      setState(() {
+                        _mapController = controller;
+                      });
+                    },
+                    markers: _createMarkers(),
+                  ),
                 ),
-              },
+                ElevatedButton(
+                  onPressed: _searchVets,
+                  child: Text('Search Veterinarians'),
+                ),
+              ],
             )
           : Center(
               child: CircularProgressIndicator(),
