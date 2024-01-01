@@ -13,7 +13,7 @@ class GeolocPage extends StatefulWidget {
 class _GeolocPageState extends State<GeolocPage> {
   final GeolocService _geolocService = GeolocService();
   late GoogleMapController _mapController;
-  late LatLng _currentPosition;
+  LatLng? _currentPosition;
 
   @override
   void initState() {
@@ -42,7 +42,9 @@ class _GeolocPageState extends State<GeolocPage> {
 
     if (permission == LocationPermission.whileInUse ||
         permission == LocationPermission.always) {
-      await _getCurrentLocation();
+      if (_currentPosition == null) {
+        await _getCurrentLocation();
+      }
     } else {
       // Handle the case when the user denies location permission
       print('Location permission denied');
@@ -71,7 +73,7 @@ class _GeolocPageState extends State<GeolocPage> {
       body: _currentPosition != null
           ? GoogleMap(
               initialCameraPosition: CameraPosition(
-                target: _currentPosition,
+                target: _currentPosition!,
                 zoom: 15,
               ),
               onMapCreated: (controller) {
@@ -82,7 +84,7 @@ class _GeolocPageState extends State<GeolocPage> {
               markers: {
                 Marker(
                   markerId: MarkerId('currentLocation'),
-                  position: _currentPosition,
+                  position: _currentPosition!,
                   infoWindow: InfoWindow(title: 'Your Location'),
                 ),
               },
