@@ -1,18 +1,16 @@
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tp_firebase/catProfile/service/dbRequest.dart';
 
 class CatProfile extends StatefulWidget {
-  const CatProfile({super.key});
+  CatProfile({super.key, required this.catID});
+  var catID;
   @override
   CatProfileState createState() => CatProfileState();
 }
 
-CollectionReference cat = FirebaseFirestore.instance.collection('cat');
-
 class CatProfileState extends State<CatProfile> {
-  var catID = "1";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +19,7 @@ class CatProfileState extends State<CatProfile> {
       ),
       body: Center(
           child: StreamBuilder<QuerySnapshot>(
-              stream: cat.where("catID", isEqualTo: "1").snapshots(),
+              stream: cat.where("catID", isEqualTo: widget.catID).snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return const Text('Something went wrong');
@@ -31,7 +29,7 @@ class CatProfileState extends State<CatProfile> {
                 }
                 Map<String, dynamic> data =
                     snapshot.data!.docs[0].data()! as Map<String, dynamic>;
-                return Expanded(
+                return Container(
                     child: Column(children: [
                   CatInfoDisplay(dataName: "name", dataContent: data["name"]),
                   CatInfoDisplay(dataName: "race", dataContent: data["race"]),
@@ -48,15 +46,18 @@ class CatProfileState extends State<CatProfile> {
                       dataName: "medical history",
                       dataContent: data["medicalHistory"]),
                   ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
                       itemCount:
                           (data["vaccine"] as Map<String, dynamic>).length,
                       itemBuilder: (context, index) {
                         var vaccineName =
                             (data["vaccine"] as Map<String, dynamic>)["name"];
-                        var vaccineDate = ((data["vaccine"] as Map<String, dynamic>)["date"]as Timestamp).toDate();
-                        return CatInfoDisplay(dataName: vaccineName, dataContent: vaccineDate);
+                        var vaccineDate = ((data["vaccine"]
+                                as Map<String, dynamic>)["date"] as Timestamp)
+                            .toDate();
+                        return CatInfoDisplay(
+                            dataName: vaccineName, dataContent: vaccineDate);
                       })
                 ]));
               })),
@@ -73,12 +74,9 @@ class CatInfoDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     if (dataContent.runtimeType == DateTime) {
       dataContent = DateFormat('dd-MM-yyyy').format(dataContent);
-    } else {
-      print(dataContent.runtimeType);
-      print("TYPE");
     }
     return Container(
-      child: Row(children: [Text(dataName), Text(dataContent.toString())]),
+      child: Text("$dataName : ${dataContent.toString()}"),
     );
   }
 }
