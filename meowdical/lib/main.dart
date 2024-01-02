@@ -6,6 +6,7 @@ import 'Auth/widgets/auth_page.dart' as Register;
 import 'Auth/widgets/login_page.dart';
 import 'Geoloc/widgets/geoloc_page.dart';
 import 'Commu/widgets/Chat_Page.dart';
+import 'calendar/widget/Calendar_Page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -68,6 +69,13 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _navigateToCalendarPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Calendar_Page()),
+    );
+  }
+
   // Function to sign out the user
   void _signOut() async {
     await FirebaseAuth.instance.signOut();
@@ -116,6 +124,13 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: Icon(Icons.chat),
               onPressed: _navigateToChatPage,
             ),
+          if (FirebaseAuth.instance.currentUser != null)
+            IconButton(
+              icon: Icon(Icons.calendar_today),
+              onPressed: () {
+                _navigateToCalendarPage();
+              },
+            )
         ],
       ),
       body: Center(
