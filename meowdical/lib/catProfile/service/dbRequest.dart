@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,13 +11,12 @@ CollectionReference cat = FirebaseFirestore.instance.collection('cat');
 class dbRequest {
   var uid;
   void addCat(String name, String race, DateTime birthDate, bool isCastrated,
-      bool isChipped, String medicalHistory, DateTime lastVisit) async {
+      bool isChipped, String medicalHistory, DateTime lastVisit, String? image) async {
     if (FirebaseAuth.instance.currentUser == null) {
       uid = "ahru";
     } else {
       uid = FirebaseAuth.instance.currentUser;
     }
-    print("JADD");
     await cat.add({
       'catID': UniqueKey().toString(),
       'UID': uid,
@@ -29,9 +27,9 @@ class dbRequest {
       'medicalHistory': medicalHistory,
       'name': name,
       'race': race,
-      'vaccine': "",
+      'image': image,
+      'vaccine': null
     });
-    print("JAI ADD");
   }
 
   void delete(CollectionReference<Object?> collectionName, id) async {
@@ -46,7 +44,6 @@ class dbRequest {
   }
 
   void modifyCat(
-      CollectionReference<Object?> collectionName,
       Int id,
       String name,
       String race,
@@ -54,9 +51,9 @@ class dbRequest {
       Bool isCastrated,
       Bool isChipped,
       String medicalHistory,
-      List<Vaccine> vaccines) async {
+      Map<String,dynamic> vaccine) async {
     DocumentReference doc;
-    await collectionName.where('id', isEqualTo: id).get().then((value) {
+    await cat.where('id', isEqualTo: id).get().then((value) {
       doc = value.docs[0].reference;
       doc
           .set({
@@ -67,7 +64,7 @@ class dbRequest {
             'medicalHistory': medicalHistory,
             'name': name,
             'race': race,
-            'vaccine': vaccines,
+            'vaccine': vaccine,
           }, SetOptions(merge: true))
           .timeout(const Duration(seconds: 3))
           .catchError((onError) {});

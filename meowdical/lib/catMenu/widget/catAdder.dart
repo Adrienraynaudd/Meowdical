@@ -1,6 +1,9 @@
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:tp_firebase/catProfile/modele/Vaccine.dart';
 import 'package:tp_firebase/catProfile/service/dbRequest.dart';
@@ -25,6 +28,32 @@ class CatAdderState extends State<CatAdder> {
     setState(() {});
   }
 
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
+  String? urlDownload;
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+    setState(() {
+      pickedFile = result.files.first;
+    });
+  }
+
+  Future uploadFile() async {
+    final path = 'files/${pickedFile!.name}';
+    final file = File(pickedFile!.path!);
+    final ref = FirebaseStorage.instance.ref().child(path);
+    setState(() {
+      uploadTask = ref.putFile(file);
+    });
+    final snapshot = await uploadTask!.whenComplete(() {});
+    setState(() {
+      uploadTask = null;
+    });
+    urlDownload = await snapshot.ref.getDownloadURL();
+    print("url : $urlDownload");
+  }
+
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
@@ -34,6 +63,9 @@ class CatAdderState extends State<CatAdder> {
                 builder: ((context, setState) => AlertDialog(
                       title: const Text("Add your note"),
                       content: Column(children: [
+                        ElevatedButton(
+                        onPressed: selectFile,
+                        child: const Text("Select a picture")),
                         TextField(
                           decoration: const InputDecoration(
                               hintText: "Name",
@@ -121,15 +153,21 @@ class CatAdderState extends State<CatAdder> {
                             onPressed: () => Navigator.pop(context, 'cancel'),
                             child: const Text('Cancel')),
                         TextButton(
-                            onPressed: () => dbRequest().addCat(
-                                _nameController.text,
-                                _raceController.text,
-                                DateTime.parse(_birthDateController.text),
-                                _castratedController,
-                                _chipController,
-                                _historyController.text,
-                                // _vaccinesController.text as List<Vaccine>,
-                                DateTime.parse(_lastVisitController.text)),
+                            onPressed: () async {
+                              if (pickedFile != null) {
+                                await uploadFile();
+                              }
+                              dbRequest().addCat(
+                                  _nameController.text,
+                                  _raceController.text,
+                                  DateTime.parse(_birthDateController.text),
+                                  _castratedController,
+                                  _chipController,
+                                  _historyController.text,
+                                  // _vaccinesController.text as List<Vaccine>,
+                                  DateTime.parse(_lastVisitController.text),
+                                  urlDownload);
+                            },
                             child: const Text('Add')),
                       ],
                     )))),
