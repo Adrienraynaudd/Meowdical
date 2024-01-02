@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:tp_firebase/catProfile/service/dbRequest.dart';
+import 'package:meowdical/catProfile/service/dbRequest.dart';
 
 class CatProfile extends StatefulWidget {
   CatProfile({super.key, required this.catID});

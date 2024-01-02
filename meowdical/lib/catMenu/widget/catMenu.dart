@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:tp_firebase/catMenu/widget/cat.dart';
-import 'package:tp_firebase/catMenu/widget/catAdder.dart';
-import 'package:tp_firebase/catProfile/service/dbRequest.dart';
+import 'package:meowdical/catMenu/widget/cat.dart';
+import 'package:meowdical/catMenu/widget/catAdder.dart';
+import 'package:meowdical/catProfile/service/dbRequest.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class CatMenu extends StatefulWidget {

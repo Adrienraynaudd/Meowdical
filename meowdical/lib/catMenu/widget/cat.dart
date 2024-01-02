@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tp_firebase/catProfile/widget/catProfile.dart';
+import 'package:meowdical/catProfile/widget/catProfile.dart';
 
 class Cat extends StatelessWidget {
   Cat({super.key, required this.name, required this.catID});
