@@ -13,6 +13,9 @@ class _BtnImagesPagesState extends State<BtnImagesPages> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Album'),
+      ),
       body: Center(
         child: Column(
 

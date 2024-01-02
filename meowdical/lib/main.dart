@@ -7,6 +7,7 @@ import 'Auth/widgets/login_page.dart';
 import 'Geoloc/widgets/geoloc_page.dart';
 import 'Commu/widgets/Chat_Page.dart';
 import 'calendar/widget/Calendar_Page.dart';
+import 'PhotoAlbum/Pages/BtnPageImage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,13 +23,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Notes',
+      title: 'Meowdical',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Notes Application with Firebase'),
+      home: const MyHomePage(title: 'Meowdical'),
       routes: {
         '/auth': (context) => Register.AuthPage(),
       },
@@ -89,6 +90,13 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _navigateToPhotoAlbumPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => BtnImagesPages()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,7 +138,14 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 _navigateToCalendarPage();
               },
-            )
+            ),
+          if (FirebaseAuth.instance.currentUser != null)
+            IconButton(
+              icon: Icon(Icons.photo_album),
+              onPressed: () {
+                _navigateToPhotoAlbumPage();
+              },
+            ),
         ],
       ),
       body: Center(
@@ -151,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   const SizedBox(height: 16),
                   Text(
                     'Welcome ${FirebaseAuth.instance.currentUser!.displayName ?? ''}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
@@ -164,8 +179,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             if (FirebaseAuth.instance.currentUser == null)
-              Text(
-                'Log in to access notes',
+              const Text(
+                'Log in to access to Meowdical',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

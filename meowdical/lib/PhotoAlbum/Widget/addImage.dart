@@ -6,6 +6,8 @@ import 'package:file_picker/file_picker.dart';
 
 import 'package:meowdical/PhotoAlbum/Model/modelPhoto.dart';
 import 'package:meowdical/PhotoAlbum/Service/photoController.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
 
 class AddButton extends StatefulWidget {
   @override
@@ -34,11 +36,10 @@ class _AddButton extends State<AddButton> {
     final path = 'files/${pickedFile!.name}';
     // final file = File(pickedFile!.path!);
 
-    final file = pickedFile!.bytes!;
-
     final ref = FirebaseStorage.instance.ref().child(path);
     setState(() {
-      uploadTask = ref.putData(file);
+      if (pickedFile!.bytes != null) uploadTask = ref.putData(pickedFile!.bytes!);
+      else if (pickedFile!.path != null) uploadTask = ref.putFile(File(pickedFile!.path!));
     });
 
     final snapshot = await uploadTask!.whenComplete(() {});
@@ -62,16 +63,28 @@ class _AddButton extends State<AddButton> {
             child: Column(
           children: [
             if (pickedFile != null)
-              Expanded(
-                child: Container(
-                  color: Colors.greenAccent,
-                  child: Image.memory(
-                    pickedFile!.bytes!,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
+              if (pickedFile!.bytes != null)
+                Expanded(
+                  child: Container(
+                    color: Colors.greenAccent,
+                    child: Image.memory(
+                      pickedFile!.bytes!,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    ),
+                  ),
+                )
+              else if (pickedFile!.path != null)
+                Expanded(
+                  child: Container(
+                    color: Colors.greenAccent,
+                    child: Image.file(
+                      File(pickedFile!.path!),
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    ),
                   ),
                 ),
-              ),
             TextButton(
               onPressed: selectFile,
               child: Text('Select Image'),
@@ -99,7 +112,7 @@ class _AddButton extends State<AddButton> {
                   nomDeLaPhoto : titleController.text ,
                   description : descriptionController.text,
                   lienPhoto : url,
-                  // uid : ,
+                  uid: FirebaseAuth.instance.currentUser!.uid,
                 );
 
                 await PhotoController().upload(photo);

@@ -50,6 +50,9 @@ class _CalendarState extends State<Calendar> {
     _selectedEvents.value = _getEventsForDay(_selectedDay);
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Calendar'),
+      ),
         body: Center(
             child: Column(
           children: [

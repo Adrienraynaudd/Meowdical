@@ -5,13 +5,13 @@ class ModelPhoto {
   final String nomDeLaPhoto;
   final String description;
   final String lienPhoto;
-  // final String uid;
+  final String uid;
 
   ModelPhoto({
     this.id,
     required this.nomDeLaPhoto,
     required this.description,
     required this.lienPhoto,
-    // required this.uid,
+    required this.uid,
   });
 }

@@ -22,13 +22,21 @@ class _Calendar_PageState extends State<Calendar_Page> {
         builder: (BuildContext context,
             AsyncSnapshot<Map<DateTime, List<Event>>> snapshot) {
           if (snapshot.hasError) {
-            return const Scaffold(body: Text('Something went wrong'));
+            return Scaffold(
+              appBar: AppBar(
+        title: const Text('Calendar'),
+      ),
+              body: const Text('Something went wrong'));
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              body: Center(
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Calendar'),
+              ),
+              body: const Center(
                 child: CircularProgressIndicator(),
               ),
+              
             );
           }
           events = snapshot.data!;
