@@ -51,20 +51,20 @@ class CatProfileState extends State<CatProfile> {
                   //   child: Row(children: [
                   //     Text("Vaccines : "),
                   //     Column(children: [
-                      ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount:
-                          (data["vaccine"] as Map<String, dynamic>).length,
-                      itemBuilder: (context, index) {
-                        var vaccineName =
-                            (data["vaccine"] as Map<String, dynamic>)["name"];
-                        var vaccineDate = ((data["vaccine"]
-                                as Map<String, dynamic>)["date"] as Timestamp)
-                            .toDate();
-                        return CatInfoDisplay(
-                            dataName: vaccineName, dataContent: vaccineDate);
-                      }), 
+                      // ListView.builder(
+                      // physics: const NeverScrollableScrollPhysics(),
+                      // shrinkWrap: true,
+                      // itemCount:
+                      //     (data["vaccine"] as Map<String, dynamic>).length,
+                      // itemBuilder: (context, index) {
+                      //   var vaccineName =
+                      //       (data["vaccine"] as Map<String, dynamic>)["name"];
+                      //   var vaccineDate = ((data["vaccine"]
+                      //           as Map<String, dynamic>)["date"] as Timestamp)
+                      //       .toDate();
+                      //   return CatInfoDisplay(
+                      //       dataName: vaccineName, dataContent: vaccineDate);
+                      // }), 
                   //     FloatingActionButton(onPressed: ()async => showDialog(context: context, builder: (BuildContext context) => AlertDialog(
                   //       title: const Text("Add a vaccine"),
                   //       content: Column(children: [

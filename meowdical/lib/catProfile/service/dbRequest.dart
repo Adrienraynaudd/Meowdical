@@ -11,7 +11,7 @@ CollectionReference cat = FirebaseFirestore.instance.collection('cat');
 class dbRequest {
   var uid;
   void addCat(String name, String race, DateTime birthDate, bool isCastrated,
-      bool isChipped, String medicalHistory, DateTime lastVisit, String? image) async {
+      bool isChipped, String medicalHistory, DateTime lastVisit) async {
     if (FirebaseAuth.instance.currentUser == null) {
       uid = "ahru";
     } else {
@@ -27,8 +27,8 @@ class dbRequest {
       'medicalHistory': medicalHistory,
       'name': name,
       'race': race,
-      'image': image,
-      'vaccine': null
+      // 'image': image,
+      // 'vaccine': null
     });
   }
 

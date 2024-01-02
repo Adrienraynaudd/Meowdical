@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:tp_firebase/Auth/widgets/auth_page.dart';
+import 'package:tp_firebase/Auth/widgets/login_page.dart';
 import 'package:tp_firebase/catMenu/widget/catMenu.dart';
 import 'package:tp_firebase/catProfile/widget/catProfile.dart';
 import 'package:tp_firebase/firebase_options.dart';
@@ -54,11 +56,24 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: ElevatedButton(onPressed: () {
+        child: Column(children: [
+          ElevatedButton(onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => CatMenu()));
-        },
-        child: const Text("catMenu")),
+              context, MaterialPageRoute(builder: (context) => const CatMenu()));
+          },
+          child: const Text("catMenu")),
+          ElevatedButton(onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => const AuthPage()));
+          },
+          child: const Text("Register")),
+          ElevatedButton(onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => const LoginPage()));
+          },
+          child: const Text("Login")),
+        ])
+        
       ),
     );
   }

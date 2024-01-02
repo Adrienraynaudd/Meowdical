@@ -63,9 +63,9 @@ class CatAdderState extends State<CatAdder> {
                 builder: ((context, setState) => AlertDialog(
                       title: const Text("Add your note"),
                       content: Column(children: [
-                        ElevatedButton(
-                        onPressed: selectFile,
-                        child: const Text("Select a picture")),
+                        // ElevatedButton(
+                        // onPressed: selectFile,
+                        // child: const Text("Select a picture")),
                         TextField(
                           decoration: const InputDecoration(
                               hintText: "Name",
@@ -154,9 +154,9 @@ class CatAdderState extends State<CatAdder> {
                             child: const Text('Cancel')),
                         TextButton(
                             onPressed: () async {
-                              if (pickedFile != null) {
-                                await uploadFile();
-                              }
+                              // if (pickedFile != null) {
+                              //   await uploadFile();
+                              // }
                               dbRequest().addCat(
                                   _nameController.text,
                                   _raceController.text,
@@ -165,8 +165,9 @@ class CatAdderState extends State<CatAdder> {
                                   _chipController,
                                   _historyController.text,
                                   // _vaccinesController.text as List<Vaccine>,
-                                  DateTime.parse(_lastVisitController.text),
-                                  urlDownload);
+                                  DateTime.parse(_lastVisitController.text)
+                                  // urlDownload
+                                  );
                             },
                             child: const Text('Add')),
                       ],
