@@ -45,6 +45,8 @@ dependencies:
   google_place: ^0.4.7
   firebase_auth: ^4.15.3
   intl: ^0.18.1
+  file_picker: ^6.1.1
+  universal_html: ^2.0.8
 
 dev_dependencies:
   flutter_test:
