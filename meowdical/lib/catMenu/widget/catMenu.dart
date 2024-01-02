@@ -22,7 +22,7 @@ class CatMenuState extends State<CatMenu> {
         child: StreamBuilder<QuerySnapshot>(
           stream: cat
               .where("UID",
-                  isEqualTo: "ahru" /*FirebaseAuth.instance.currentUser!.uid*/)
+                  isEqualTo: FirebaseAuth.instance.currentUser!.uid)
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {

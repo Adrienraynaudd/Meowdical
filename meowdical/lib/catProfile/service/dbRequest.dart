@@ -13,9 +13,9 @@ class dbRequest {
   void addCat(String name, String race, DateTime birthDate, bool isCastrated,
       bool isChipped, String medicalHistory, DateTime lastVisit) async {
     if (FirebaseAuth.instance.currentUser == null) {
-      uid = "ahru";
+      uid = "";
     } else {
-      uid = FirebaseAuth.instance.currentUser;
+      uid = FirebaseAuth.instance.currentUser!.uid;
     }
     await cat.add({
       'catID': UniqueKey().toString(),

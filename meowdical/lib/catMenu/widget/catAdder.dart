@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:meowdical/catProfile/modele/Vaccine.dart';
 import 'package:meowdical/catProfile/service/dbRequest.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CatAdder extends StatefulWidget {
   const CatAdder({super.key});
