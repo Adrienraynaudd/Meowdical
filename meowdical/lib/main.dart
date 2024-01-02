@@ -5,6 +5,7 @@ import 'firebase_options.dart';
 import 'Auth/widgets/auth_page.dart' as Register;
 import 'Auth/widgets/login_page.dart';
 import 'Geoloc/widgets/geoloc_page.dart';
+import 'Commu/widgets/Chat_Page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,6 +61,13 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _navigateToChatPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ChatPage()),
+    );
+  }
+
   // Function to sign out the user
   void _signOut() async {
     await FirebaseAuth.instance.signOut();
@@ -102,6 +110,11 @@ class _MyHomePageState extends State<MyHomePage> {
             IconButton(
               icon: Icon(Icons.gps_fixed),
               onPressed: _navigateToGeolocPage,
+            ),
+          if (FirebaseAuth.instance.currentUser != null)
+            IconButton(
+              icon: Icon(Icons.chat),
+              onPressed: _navigateToChatPage,
             ),
         ],
       ),
