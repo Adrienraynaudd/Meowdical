@@ -26,7 +26,7 @@ class _BtnImagesPagesState extends State<BtnImagesPages> {
                   MaterialPageRoute(builder: (context) => AddPic()),
                 );
               },
-              child: const Text('Go to PageTest2'),
+              child: const Text('Add Image'),
             ),
             ElevatedButton(
               onPressed: () {
